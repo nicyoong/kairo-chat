@@ -26,3 +26,24 @@ def truncate_chinese_text(text: str, limit: int = 1000) -> str:
     if last_punct != -1:
         truncated = truncated[: last_punct + 1]
     return truncated
+
+def smart_split(text):
+    """Split text into natural-sounding chunks based on punctuation and newlines."""
+    text = text.strip().replace("\r\n", "\n").replace("\r", "\n")
+
+    line_blocks = [block.strip() for block in text.split("\n") if block.strip()]
+    final_parts = []
+    for block in line_blocks:
+        sentences = re.split(r"(?<=[.!?]) +", block)
+        for s in sentences:
+            if not s.strip():
+                continue
+            parts = s.split(",")
+            if len(parts) > 2:
+                for i in range(0, len(parts), 2):  # group every two comma parts
+                    chunk = ",".join(parts[i : i + 2]).strip()
+                    if chunk:
+                        final_parts.append(chunk)
+            else:
+                final_parts.append(s.strip())
+    return final_parts
