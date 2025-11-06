@@ -157,4 +157,16 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
 
     sys.excepthook = handle_exception
 
-    
+    logger.info(f"Console logging started, outputting to {log_path}")
+
+    # Redirect print() globally
+    builtins_print = print
+
+    def print_to_logger(*args, **kwargs):
+        msg = " ".join(str(a) for a in args)
+        logger.info(msg)
+        # builtins_print(*args, **kwargs)  # optional: still show native print output
+
+    builtins.print = print_to_logger
+
+    return logger
