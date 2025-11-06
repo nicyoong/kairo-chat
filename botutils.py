@@ -24,6 +24,11 @@ def ensure_config_exists(config_path="config.yml"):
     default_config = {
         "serious_channels": [],
         "short_reply_channels": [],
+        "manual_channels": [],
+        "short_reply_guilds": [],
+        "short_reply_users": [],
+        "allowed_guilds": [],
+        "allowed_users": []
     }
 
     if not os.path.exists(config_path):
