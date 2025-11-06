@@ -102,3 +102,19 @@ def attach_trait_getters(cls):
 
     def get_graduation_year(self):
         return self.character_profile.get_trait("education.graduation_year")
+    
+    # Career
+    def get_job_title(self):
+        return self.character_profile.get_trait("career.title")
+
+    def get_industry(self):
+        return self.character_profile.get_trait("career.industry")
+
+    def get_employment_type(self):
+        return self.character_profile.get_trait("career.employment_type")
+
+    def get_experience_level(self):
+        return self.character_profile.get_trait("career.experience_level")
+
+    def get_work_location(self):
+        return self.character_profile.get_trait("career.work_location")
