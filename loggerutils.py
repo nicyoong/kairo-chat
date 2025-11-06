@@ -125,4 +125,8 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 
+    # Clean old handlers (avoid duplicates)
+    for h in logger.handlers[:]:
+        logger.removeHandler(h)
+
     
