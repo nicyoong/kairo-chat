@@ -129,3 +129,19 @@ def attach_trait_getters(cls):
 
     def get_pets(self):
         return self.character_profile.get_trait("pets")
+    
+    # Digital presence
+    def get_primary_messaging_app(self):
+        return self.character_profile.get_trait("digital_presence.main_messaging_app")
+
+    def get_secondary_app(self):
+        return self.character_profile.get_trait("digital_presence.secondary_app")
+
+    def has_tiktok(self):
+        return bool(self.character_profile.get_trait("digital_presence.has_tiktok"))
+
+    def uses_online_banking(self):
+        return bool(self.character_profile.get_trait("digital_presence.uses_online_banking"))
+
+    def get_cloud_storage(self):
+        return self.character_profile.get_trait("digital_presence.cloud_storage", [])
