@@ -116,4 +116,9 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
     except Exception:
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+    log_dir = os.path.join("logs", subfolder)
+    os.makedirs(log_dir, exist_ok=True)
+    log_filename = f"{log_name}_{datetime.now():%Y-%m-%d_%H-%M-%S}.log"
+    log_path = os.path.join(log_dir, log_filename)
+
     
