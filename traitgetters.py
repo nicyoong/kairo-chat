@@ -204,3 +204,11 @@ def attach_trait_getters(cls):
     cls.get_other_languages = get_other_languages
     cls.get_religion = get_religion
     cls.get_citizen_id_prefix = get_citizen_id_prefix
+
+    cls.get_birthday = get_birthday
+    cls.get_age = get_age
+
+    cls.has_drivers_license = has_drivers_license
+    cls.has_passport = has_passport
+    cls.get_passport_country = get_passport_country
+    cls.get_vehicle_owned = get_vehicle_owned
