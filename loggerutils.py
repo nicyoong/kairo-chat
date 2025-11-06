@@ -70,3 +70,12 @@ class GeminiLogTracker:
             )
         elif count >= self.max_calls_per_day:
             print(f"[GeminiLogTracker] LIMIT REACHED: {count} calls in the last 24 hours!")
+
+    def count(self) -> int:
+        """
+        Return the number of calls logged within the last 24 hours.
+        """
+        now = time.time()
+        one_day_ago = now - 24 * 3600
+        timestamps = [ts for ts in self._read_timestamps() if ts >= one_day_ago]
+        return len(timestamps)
