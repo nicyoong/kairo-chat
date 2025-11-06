@@ -16,3 +16,4 @@ import textutils
 from characterloader import load_character_profile
 from characterprofile import CharacterProfile
 from loggerutils import GeminiLogTracker
+from traitgetters import attach_trait_getters
