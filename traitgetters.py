@@ -191,3 +191,16 @@ def attach_trait_getters(cls):
 
     def get_personality_serious(self):
         return self.character_profile.get_trait("personality_serious")
+    
+    # attach all trait getters to class
+    cls.get_id = get_id
+    cls.get_full_name = get_full_name
+    cls.get_short_name = get_short_name
+    cls.get_chinese_name = get_chinese_name
+    cls.get_gender = get_gender
+    cls.get_citizenship = get_citizenship
+    cls.get_ethnicity = get_ethnicity
+    cls.get_primary_language = get_primary_language
+    cls.get_other_languages = get_other_languages
+    cls.get_religion = get_religion
+    cls.get_citizen_id_prefix = get_citizen_id_prefix
