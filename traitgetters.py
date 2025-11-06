@@ -65,3 +65,16 @@ def attach_trait_getters(cls):
 
     def get_vehicle_owned(self):
         return self.character_profile.get_trait("vehicle_owned")
+    
+    # Residence
+    def get_country(self):
+        return self.character_profile.get_trait("residence.country")
+
+    def get_state(self):
+        return self.character_profile.get_trait("residence.state")
+
+    def get_city(self):
+        return self.character_profile.get_trait("residence.city")
+
+    def get_area(self):
+        return self.character_profile.get_trait("residence.area")
