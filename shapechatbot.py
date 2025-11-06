@@ -15,3 +15,4 @@ from openai import OpenAI
 import textutils
 from characterloader import load_character_profile
 from characterprofile import CharacterProfile
+from loggerutils import GeminiLogTracker
