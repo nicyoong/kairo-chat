@@ -212,3 +212,11 @@ def attach_trait_getters(cls):
     cls.has_passport = has_passport
     cls.get_passport_country = get_passport_country
     cls.get_vehicle_owned = get_vehicle_owned
+
+    cls.get_country = get_country
+    cls.get_state = get_state
+    cls.get_city = get_city
+    cls.get_area = get_area
+    cls.get_postal_code = get_postal_code
+    cls.get_housing_type = get_housing_type
+    cls.get_living_with = get_living_with
