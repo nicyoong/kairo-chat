@@ -23,3 +23,10 @@ URGENT_RESPONSES = [
     "I’m listening. What’s wrong?",
     "Hey, I’m here. You okay?",
 ]
+URGENT_RESPONSES_1H = [
+    "Of course, what’s up?",
+    "Sure, what’s going on?",
+    "Yeah, I’m here, what’s up?",
+    "Okay, what’s happening?",
+    "Alright, what’s up?",
+]
