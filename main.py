@@ -36,7 +36,7 @@ display_name = "Kairo"
 profile_name = "kairo"
 
 def main():
-
+    botutils.ensure_config_exists()
 
 if __name__ == "__main__":
     main()
