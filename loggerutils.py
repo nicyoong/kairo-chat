@@ -144,4 +144,9 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
 
+    # Capture warnings and uncaught exceptions
+    logging.captureWarnings(True)
+    warnings_logger = logging.getLogger("py.warnings")
+    warnings_logger.addHandler(file_handler)
+
     
