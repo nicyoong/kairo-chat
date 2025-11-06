@@ -52,3 +52,16 @@ def attach_trait_getters(cls):
         
     def get_age(self):
         return self.character_profile.get_trait("age")
+    
+    # Legal / documents / transport
+    def has_drivers_license(self):
+        return bool(self.character_profile.get_trait("has_drivers_license"))
+
+    def has_passport(self):
+        return bool(self.character_profile.get_trait("has_passport"))
+
+    def get_passport_country(self):
+        return self.character_profile.get_trait("passport_country")
+
+    def get_vehicle_owned(self):
+        return self.character_profile.get_trait("vehicle_owned")
