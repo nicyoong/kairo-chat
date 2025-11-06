@@ -38,3 +38,14 @@ def attach_trait_getters(cls):
 
     def get_citizen_id_prefix(self):
         return self.character_profile.get_trait("citizen_id_prefix")
+    
+    # Age & Birthday
+    def get_birthday(self):
+        date_str = self.character_profile.get_trait("birthday")
+        if not date_str:
+            return None
+        try:
+            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            return random.choice([dt.strftime("%B %d, %Y"), dt.strftime("%B %d")])
+        except ValueError:
+            return date_str
