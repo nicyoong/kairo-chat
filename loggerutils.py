@@ -79,3 +79,31 @@ class GeminiLogTracker:
         one_day_ago = now - 24 * 3600
         timestamps = [ts for ts in self._read_timestamps() if ts >= one_day_ago]
         return len(timestamps)
+    
+    def max_calls_per_minute(self) -> int:
+        """
+        Return the maximum number of calls that occurred within any 60-second window
+        in the past 24 hours.
+        """
+        timestamps = self._read_timestamps()
+        if not timestamps:
+            return 0
+
+        # Keep only last 24h
+        now = time.time()
+        one_day_ago = now - 24 * 3600
+        timestamps = [ts for ts in timestamps if ts >= one_day_ago]
+        timestamps.sort()
+
+        max_in_window = 0
+        window = 60  # seconds
+
+        # Sliding window approach using bisect
+        for i, ts in enumerate(timestamps):
+            end_time = ts + window
+            j = bisect.bisect_right(timestamps, end_time)
+            count = j - i
+            if count > max_in_window:
+                max_in_window = count
+
+        return max_in_window
