@@ -107,3 +107,13 @@ class GeminiLogTracker:
                 max_in_window = count
 
         return max_in_window
+    
+def setup_console_logger(log_name: str, subfolder: str = "console"):
+    """Sets up a global console logger that writes to both console and file."""
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+    
