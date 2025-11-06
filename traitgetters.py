@@ -168,3 +168,17 @@ def attach_trait_getters(cls):
     def get_random_favorite_movie(self):
         movies = self.character_profile.get_trait("interests_and_hobbies.favorite_movies", [])
         return random.choice(movies) if movies else None
+    
+    def get_random_favorite_food(self):
+        foods = self.character_profile.get_trait("interests_and_hobbies.favorite_foods", [])
+        return random.choice(foods) if foods else None
+
+    def get_random_favorite_drink(self):
+        drinks = self.character_profile.get_trait("interests_and_hobbies.favorite_drinks", [])
+        return random.choice(drinks) if drinks else None
+
+    def get_random_preferred_hangout_spot(self):
+        spots = self.character_profile.get_trait(
+            "interests_and_hobbies.preferred_hangout_spots", []
+        )
+        return random.choice(spots) if spots else None
