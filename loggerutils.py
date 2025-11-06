@@ -38,4 +38,10 @@ class GeminiLogTracker:
             reader = csv.reader(f)
             return [float(row[0]) for row in reader if row]
 
-    
+    def _write_timestamps(self, timestamps):
+        """Write timestamps back to the CSV file (truncate if over limit)."""
+        timestamps = timestamps[-self.max_calls_per_day :]  # keep only newest
+        with open(self.log_file, "w", encoding="utf-8", newline="") as f:
+            writer = csv.writer(f)
+            for ts in timestamps:
+                writer.writerow([f"{ts:.3f}"])
