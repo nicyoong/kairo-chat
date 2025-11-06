@@ -141,4 +141,7 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
     stream_handler.setLevel(logging.INFO)
     stream_handler.setFormatter(logging.Formatter("%(message)s"))
 
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+
     
