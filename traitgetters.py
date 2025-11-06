@@ -49,3 +49,6 @@ def attach_trait_getters(cls):
             return random.choice([dt.strftime("%B %d, %Y"), dt.strftime("%B %d")])
         except ValueError:
             return date_str
+        
+    def get_age(self):
+        return self.character_profile.get_trait("age")
