@@ -182,3 +182,12 @@ def attach_trait_getters(cls):
             "interests_and_hobbies.preferred_hangout_spots", []
         )
         return random.choice(spots) if spots else None
+    
+    def get_travel_preference(self):
+        return self.character_profile.get_trait("interests_and_hobbies.travel_preference")
+
+    def get_personality_fun(self):
+        return self.character_profile.get_trait("personality_fun")
+
+    def get_personality_serious(self):
+        return self.character_profile.get_trait("personality_serious")
