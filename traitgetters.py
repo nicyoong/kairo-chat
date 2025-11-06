@@ -87,3 +87,18 @@ def attach_trait_getters(cls):
 
     def get_living_with(self):
         return self.character_profile.get_trait("residence.living_with")
+    
+    # Education
+    def get_university(self):
+        return self.character_profile.get_trait("education.university")
+
+    def get_degree(self):
+        return self.character_profile.get_trait("education.degree")
+
+    def get_field_of_study(self):
+        return self.character_profile.get_trait(
+            "education.field"
+        ) or self.character_profile.get_trait("education.major")
+
+    def get_graduation_year(self):
+        return self.character_profile.get_trait("education.graduation_year")
