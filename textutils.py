@@ -68,3 +68,10 @@ def clean_unpaired_quotes(text: str) -> str:
 
 def clean_all_quotes(text: str) -> str:
     return re.sub(r'[“”"]', "", text)
+
+def clean_sentence(sentence):
+    sentence = clean_all_quotes(sentence)
+    sentence = re.sub(r"\s*[—]\s*", ", ", sentence)
+    sentence = re.sub(r"\s*[–]\s*", ", ", sentence)
+    sentence = re.sub(r"^\*\s*", "", sentence)
+    return sentence
