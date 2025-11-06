@@ -26,3 +26,15 @@ def attach_trait_getters(cls):
 
     def get_ethnicity(self):
         return self.character_profile.get_trait("ethnicity")
+    
+    def get_primary_language(self):
+        return self.character_profile.get_trait("primary_language")
+
+    def get_other_languages(self):
+        return self.character_profile.get_trait("other_languages", [])
+
+    def get_religion(self):
+        return self.character_profile.get_trait("religion")
+
+    def get_citizen_id_prefix(self):
+        return self.character_profile.get_trait("citizen_id_prefix")
