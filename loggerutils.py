@@ -121,4 +121,8 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
     log_filename = f"{log_name}_{datetime.now():%Y-%m-%d_%H-%M-%S}.log"
     log_path = os.path.join(log_dir, log_filename)
 
+    logger = logging.getLogger(f"{log_name}_console")
+    logger.setLevel(logging.DEBUG)
+    logger.propagate = False
+
     
