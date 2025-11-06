@@ -145,3 +145,13 @@ def attach_trait_getters(cls):
 
     def get_cloud_storage(self):
         return self.character_profile.get_trait("digital_presence.cloud_storage", [])
+    
+    # ===== PHYSICAL TRAITS =====
+    def get_height(self):
+        return self.character_profile.get_trait("physical.height_cm")
+
+    def get_blood_type(self):
+        return self.character_profile.get_trait("physical.blood_type")
+
+    def get_allergies(self):
+        return self.character_profile.get_trait("physical.allergies")
