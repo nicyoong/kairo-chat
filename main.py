@@ -34,3 +34,9 @@ USER_REMINDERS_ENABLED = {}
 QUIET_HOURS = botutils.QUIET_HOURS
 display_name = "Kairo"
 profile_name = "kairo"
+
+def main():
+
+
+if __name__ == "__main__":
+    main()
