@@ -155,3 +155,16 @@ def attach_trait_getters(cls):
 
     def get_allergies(self):
         return self.character_profile.get_trait("physical.allergies")
+    
+    # Interests and hobbies
+    def get_random_hobby(self):
+        hobbies = self.character_profile.get_trait("interests_and_hobbies.hobbies", [])
+        return random.choice(hobbies) if hobbies else None
+
+    def get_random_favorite_music_genre(self):
+        genres = self.character_profile.get_trait("interests_and_hobbies.favorite_music_genres", [])
+        return random.choice(genres) if genres else None
+
+    def get_random_favorite_movie(self):
+        movies = self.character_profile.get_trait("interests_and_hobbies.favorite_movies", [])
+        return random.choice(movies) if movies else None
