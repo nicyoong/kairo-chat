@@ -9,6 +9,7 @@ import yaml
 from dotenv import load_dotenv
 from discord import commands, tasks
 
+import botutils
 
 load_dotenv()
 typing_lock = asyncio.Lock()
