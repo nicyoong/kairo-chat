@@ -47,3 +47,21 @@ def smart_split(text):
             else:
                 final_parts.append(s.strip())
     return final_parts
+
+def clean_unpaired_quotes(text: str) -> str:
+    """
+    Remove stray or unpaired double quotes (“ or ” or ")
+    that appear at the start or end of sentences.
+    Keeps proper paired quotes intact.
+    """
+    text = text.strip()
+
+    # Remove a leading stray quote (if not followed by another later)
+    if re.match(r'^[“"]\s*\w', text) and text.count('"') % 2 != 0:
+        text = re.sub(r'^[“"]\s*', "", text)
+
+    # Remove trailing stray quotes (like ...!" or ...?" etc.)
+    if text.count('"') % 2 != 0 or text.count("”") % 2 != 0:
+        text = re.sub(r'["”]+(?=\s*[^\w\s]*$)', "", text)
+
+    return text.strip()
