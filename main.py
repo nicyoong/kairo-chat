@@ -30,3 +30,7 @@ URGENT_RESPONSES_1H = [
     "Okay, what’s happening?",
     "Alright, what’s up?",
 ]
+USER_REMINDERS_ENABLED = {}
+QUIET_HOURS = botutils.QUIET_HOURS
+display_name = "Kairo"
+profile_name = "kairo"
