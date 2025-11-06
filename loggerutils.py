@@ -129,4 +129,11 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
     for h in logger.handlers[:]:
         logger.removeHandler(h)
 
+    # File handler (rotating)
+    file_handler = RotatingFileHandler(log_path, maxBytes=5_000_000, backupCount=5)
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(
+        logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
+    )
+
     
