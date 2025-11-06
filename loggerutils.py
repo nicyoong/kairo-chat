@@ -136,4 +136,9 @@ def setup_console_logger(log_name: str, subfolder: str = "console"):
         logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
     )
 
+    # Stream handler (for console)
+    stream_handler = logging.StreamHandler(sys.stdout)
+    stream_handler.setLevel(logging.INFO)
+    stream_handler.setFormatter(logging.Formatter("%(message)s"))
+
     
