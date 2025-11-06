@@ -78,3 +78,12 @@ def attach_trait_getters(cls):
 
     def get_area(self):
         return self.character_profile.get_trait("residence.area")
+    
+    def get_postal_code(self):
+        return self.character_profile.get_trait("residence.postal_code")
+
+    def get_housing_type(self):
+        return self.character_profile.get_trait("residence.housing_type")
+
+    def get_living_with(self):
+        return self.character_profile.get_trait("residence.living_with")
