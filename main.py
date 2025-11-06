@@ -37,6 +37,8 @@ profile_name = "kairo"
 
 def main():
     botutils.ensure_config_exists()
+    with open("config.yml", "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f) or {}
 
 if __name__ == "__main__":
     main()
