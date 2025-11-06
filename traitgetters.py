@@ -220,3 +220,39 @@ def attach_trait_getters(cls):
     cls.get_postal_code = get_postal_code
     cls.get_housing_type = get_housing_type
     cls.get_living_with = get_living_with
+
+    cls.get_university = get_university
+    cls.get_degree = get_degree
+    cls.get_field_of_study = get_field_of_study
+    cls.get_graduation_year = get_graduation_year
+
+    cls.get_job_title = get_job_title
+    cls.get_industry = get_industry
+    cls.get_employment_type = get_employment_type
+    cls.get_experience_level = get_experience_level
+    cls.get_work_location = get_work_location
+
+    cls.get_family = get_family
+
+    cls.get_relationship_status = get_relationship_status
+    cls.get_pets = get_pets
+
+    cls.get_primary_messaging_app = get_primary_messaging_app
+    cls.get_secondary_app = get_secondary_app
+    cls.has_tiktok = has_tiktok
+    cls.uses_online_banking = uses_online_banking
+    cls.get_cloud_storage = get_cloud_storage
+
+    cls.get_height = get_height
+    cls.get_blood_type = get_blood_type
+    cls.get_allergies = get_allergies
+
+    cls.get_random_hobby = get_random_hobby
+    cls.get_random_favorite_music_genre = get_random_favorite_music_genre
+    cls.get_random_favorite_movie = get_random_favorite_movie
+    cls.get_random_favorite_food = get_random_favorite_food
+    cls.get_random_favorite_drink = get_random_favorite_drink
+    cls.get_random_preferred_hangout_spot = get_random_preferred_hangout_spot
+    cls.get_travel_preference = get_travel_preference
+
+    return cls
