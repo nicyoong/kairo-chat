@@ -17,3 +17,12 @@ def attach_trait_getters(cls):
 
     def get_chinese_name(self):
         return self.character_profile.get_trait("chinese_name")
+    
+    def get_gender(self):
+        return self.character_profile.get_trait("gender")
+
+    def get_citizenship(self):
+        return self.character_profile.get_trait("citizenship")
+
+    def get_ethnicity(self):
+        return self.character_profile.get_trait("ethnicity")
