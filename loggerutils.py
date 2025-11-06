@@ -29,3 +29,13 @@ class GeminiLogTracker:
         self.log_dir = os.path.join("logs", subfolder)
         os.makedirs(self.log_dir, exist_ok=True)
         self.log_file = os.path.join(self.log_dir, "call_log.csv")
+
+    def _read_timestamps(self):
+        """Read all timestamps (as float epoch times) from the CSV file."""
+        if not os.path.exists(self.log_file):
+            return []
+        with open(self.log_file, "r", encoding="utf-8", newline="") as f:
+            reader = csv.reader(f)
+            return [float(row[0]) for row in reader if row]
+
+    
