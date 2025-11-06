@@ -45,3 +45,28 @@ class GeminiLogTracker:
             writer = csv.writer(f)
             for ts in timestamps:
                 writer.writerow([f"{ts:.3f}"])
+
+    def log_call(self):
+        """
+        Record a new API call timestamp.
+        Remove entries older than 24 hours.
+        Warn if usage exceeds the threshold.
+        """
+        now = time.time()
+        one_day_ago = now - 24 * 3600
+
+        timestamps = self._read_timestamps()
+        timestamps = [ts for ts in timestamps if ts >= one_day_ago]
+        timestamps.append(now)
+
+        count = len(timestamps)
+        self._write_timestamps(timestamps)
+
+        # Console warnings
+        if count > self.warning_threshold and count < self.max_calls_per_day:
+            print(
+                f"[GeminiLogTracker] Warning: {count}/{self.max_calls_per_day} "
+                f"calls logged in the past 24 hours ({count/self.max_calls_per_day:.1%})."
+            )
+        elif count >= self.max_calls_per_day:
+            print(f"[GeminiLogTracker] LIMIT REACHED: {count} calls in the last 24 hours!")
