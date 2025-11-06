@@ -122,3 +122,10 @@ def attach_trait_getters(cls):
     # Family (you’ll fill this later; getters still safe)
     def get_family(self):
         return self.character_profile.get_trait("family", {})
+    
+    # Relationship & pets
+    def get_relationship_status(self):
+        return self.character_profile.get_trait("relationship_status")
+
+    def get_pets(self):
+        return self.character_profile.get_trait("pets")
