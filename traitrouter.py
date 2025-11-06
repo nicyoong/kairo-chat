@@ -9,3 +9,17 @@ def _init_trait_router(self):
     Each entry defines: how to detect the question, what getter to use, and how to respond.
     """
     self.trait_router = [
+        {
+            "patterns": [
+                "what's your name",
+                "what is your name",
+                "tell me your full name",
+                "can you tell me your name",
+                "what should i call you",
+            ],
+            "getter": self.get_full_name,
+            "responses": [
+                "Oh, I'm {}!",
+                "My name's {}, nice to meet you!",
+            ],
+        },
