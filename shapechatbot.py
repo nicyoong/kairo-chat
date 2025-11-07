@@ -235,3 +235,9 @@ class ShapeChatBot:
         tokens_per_second = random.choice([1.3, 1.4, 1.5, 1.6, 1.7])
         delay = tokens / tokens_per_second
         return round(max(delay, 0.5), 2)
+    
+    def get_response(self, user_id, user_input, is_reminder=False):
+        # Check for direct trait-based answers first
+        trait_reply = self.try_trait_based_response(user_input)
+        if trait_reply:
+            return trait_reply
