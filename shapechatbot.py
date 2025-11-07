@@ -87,3 +87,11 @@ class ShapeChatBot:
         self.max_tokens = 10000
         self.user_contexts = {}
         self.last_active_user = None
+
+        # Rate limiting configuration
+        self.rate_limit = 2  # 2 request per minutes
+        self.request_timestamps = []
+        self.gemini_log_tracker = GeminiLogTracker(
+            max_calls_per_day=(1000), warning_threshold_ratio=0.9
+        )
+        self.encoder = tiktoken.get_encoding("cl100k_base")
