@@ -373,3 +373,154 @@ class ShapeChatBot:
                 print(f"Failed to log Gemini API attempt: {log_err}")
             # For any API or transient service failure
             return random.choice(self.error_responses)
+        
+    def get_image_response(self, user_id, user_input, image_paths):
+        """Generate a response for a user message that includes an image."""
+        trait_reply = self.try_trait_based_response(user_input)
+        if trait_reply:
+            return trait_reply
+        
+        try:
+            if contentfilter.contains_match(user_input, self.swear_patterns):
+                print("Detected swear word, skipping LLM call.")
+                return random.choice(self.swear_responses)
+            if contentfilter.contains_match(user_input, self.nsfw_patterns):
+                print("Detected NSFW content, skipping LLM call.")
+                return random.choice(self.nsfw_responses)
+            # Rotate API key and enforce limits
+            self._enforce_rate_limit()
+            self.request_timestamps.append(time.time())
+            # Handle user context
+            if user_id not in self.user_contexts:
+                self.user_contexts[user_id] = {}
+            uc = self.user_contexts.setdefault(user_id, {})
+            uc.setdefault("conversation_history", [])
+            uc.setdefault("current_tokens", 0)
+            uc.setdefault("last_activity", time.time())
+            uc.setdefault("reminder_sent", False)
+            uc["last_activity"] = time.time()
+            uc["reminder_sent"] = False
+            is_chinese = textutils.is_mostly_chinese(user_input)
+            is_short_reply = False
+            if user_id in self.short_reply_user_ids:
+                is_short_reply = True
+            if isinstance(user_id, str) and user_id.startswith("guild_"):
+                parts = user_id.split("_")
+                guild_id = parts[1]
+                channel_id = parts[3]
+                if (
+                    guild_id in self.short_reply_guild_ids
+                    or channel_id in self.short_reply_channel_ids
+                ):
+                    is_short_reply = True
+            uc["is_short_reply"] = is_short_reply
+            if is_chinese:
+                print("The user message is in Chinese.")
+                if is_short_reply:
+                    style_instruction = (
+                        "请用一句自然的“口语化”语气来写出你的下一段回答。"
+                        "你必须优先遵循这个指令。"
+                    )
+                else:
+                    style_instruction = (
+                        "请用几句自然的“口语化”语气来写出你的下一段回答。"
+                        "你必须优先遵循这个指令。"
+                    )
+            else:
+                if is_short_reply:
+                    style_instruction = (
+                        "Write your next response in one concise sentence, "
+                        "still keeping a natural, conversational tone. "
+                        "You must prioritize following that directive."
+                    )
+                else:
+                    style_instruction = (
+                        "Write your next response with a few sentences of 'speech' "
+                        "in a conversational tone. You must prioritize following that directive."
+                    )
+            user_input_with_style = f"{user_input.strip()}\n\n{style_instruction}"
+            uc["conversation_history"].append({"role": "user", "content": user_input_with_style})
+            uc["current_tokens"] += self._calculate_tokens(user_input_with_style)
+            self._truncate_history(uc)
+            # Log context info
+            if isinstance(user_id, str) and user_id.startswith("guild_"):
+                try:
+                    parts = user_id.split("_")
+                    guild_id = parts[1]
+                    channel_id = parts[3]
+                    print(f"Server ID: {guild_id} | Channel ID: {channel_id}")
+                    print(
+                        f"Token Count for Server {guild_id} | Channel {channel_id}: {uc['current_tokens']}"
+                    )
+                except Exception:
+                    print(f"User ID (unparsed): {user_id}")
+                    print(f"Token Count for context {user_id}: {uc['current_tokens']}")
+            else:
+                print(f"User ID: {user_id}")
+                print(f"Token Count for User {user_id}: {uc['current_tokens']}")
+            recalled = self.recall_relevant_memories(user_input)
+            # Determine if this channel should use the serious personality
+            use_serious = False
+            if isinstance(user_id, str) and user_id.startswith("guild_"):
+                try:
+                    parts = user_id.split("_")
+                    channel_id = parts[3]
+                    if channel_id in self.serious_channel_ids:
+                        use_serious = True
+                except Exception:
+                    pass
+            active_personality = self.personality_serious if use_serious else self.personality_fun
+            system_prompt = {"role": "system", "content": active_personality}
+
+            content_list = [{"type": "text", "text": user_input_with_style}]
+            for path in image_paths:
+                with open(path, "rb") as image_file:
+                    base64_image = base64.b64encode(image_file.read()).decode("utf-8")
+                content_list.append({
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
+                })
+            conversation = uc["conversation_history"].copy()
+            conversation.append({
+                "role": "user",
+                "content": content_list,
+            })
+            if recalled:
+                memory_context = {
+                    "role": "system",
+                    "content": "Here are relevant past memories:\n" + "\n".join(recalled),
+                }
+                messages = [system_prompt, memory_context] + conversation
+            else:
+                messages = [system_prompt] + conversation 
+            input_text = "\n".join(self._flatten_message_content(m["content"]) for m in messages)
+            input_tokens = self._calculate_tokens(input_text)
+            image_token_estimate = sum(self._calculate_image_tokens(p) for p in image_paths)
+            input_tokens += image_token_estimate
+            uc["last_input_tokens"] = input_tokens
+            # Determine token budget based on language
+            if textutils.is_mostly_chinese(user_input):
+                maxtokens = 500
+            else:
+                maxtokens = 300
+            response = self.client.chat.completions.create(
+                model=self.model, reasoning_effort="none", messages=messages, max_tokens=maxtokens
+            )
+            self.gemini_log_tracker.log_call()
+            self._rotate_api_key()
+
+            ai_response = response.choices[0].message.content
+            # Add AI response
+            uc["conversation_history"].append({"role": "assistant", "content": ai_response})
+            uc["current_tokens"] += self._calculate_tokens(ai_response)
+
+            return ai_response
+
+        except Exception as e:
+            error_text = str(e)
+            print(f"Image API or logic error: {error_text}")
+            try:
+                self.gemini_log_tracker.log_call()
+            except Exception as log_err:
+                print(f"Failed to log Gemini API attempt: {log_err}")
+            return random.choice(self.error_responses)
