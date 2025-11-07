@@ -103,3 +103,4 @@ class ShapeChatBot:
         self.short_reply_guild_ids = [str(c) for c in (yaml_config.get("short_reply_guilds") or [])]
         self.short_reply_user_ids = [str(c) for c in (yaml_config.get("short_reply_users") or [])]
         self._last_config_mtime = os.path.getmtime(self.config_path)
+        self.is_currently_driving = False
