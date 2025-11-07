@@ -35,3 +35,7 @@ class ShapeChatBot:
                 base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
             )
             self.model = "gemini-2.5-flash-lite"
+        else:
+            self.client = None
+            self.model = "test"
+            print("[DEBUG] ShapeChatBot running in test_mode (no API calls).")
