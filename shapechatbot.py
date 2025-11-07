@@ -95,3 +95,11 @@ class ShapeChatBot:
             max_calls_per_day=(1000), warning_threshold_ratio=0.9
         )
         self.encoder = tiktoken.get_encoding("cl100k_base")
+
+        self.short_reply_channel_ids = [
+            str(c) for c in (yaml_config.get("short_reply_channels") or [])
+        ]
+        self.manual_channel_ids = [str(c) for c in (yaml_config.get("manual_channels") or [])]
+        self.short_reply_guild_ids = [str(c) for c in (yaml_config.get("short_reply_guilds") or [])]
+        self.short_reply_user_ids = [str(c) for c in (yaml_config.get("short_reply_users") or [])]
+        self._last_config_mtime = os.path.getmtime(self.config_path)
