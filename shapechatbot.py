@@ -79,3 +79,6 @@ class ShapeChatBot:
             pattern = rf"\b{re.escape(word)}\b"
             compiled = re.compile(pattern, re.IGNORECASE)
             self.nsfw_patterns.append(compiled)
+
+        self.character_profile = CharacterProfile(profile_data)
+        _init_trait_router(self)
