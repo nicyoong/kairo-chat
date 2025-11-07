@@ -260,3 +260,7 @@ class ShapeChatBot:
             uc.setdefault("current_tokens", 0)
             uc.setdefault("last_activity", time.time())
             uc.setdefault("reminder_sent", False)
+            # Update activity and reset reminder flag for real user messages
+            if not is_reminder:
+                uc["last_activity"] = time.time()
+                uc["reminder_sent"] = False
