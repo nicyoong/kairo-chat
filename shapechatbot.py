@@ -219,3 +219,12 @@ class ShapeChatBot:
     def _calculate_tokens(self, text):
         """Count tokens using GPT-4's actual tokenization"""
         return len(self.encoder.encode(text))
+    
+    def _truncate_history(self, user_context):
+        # while (len(user_context['conversation_history']) > self.max_messages or
+        #        user_context['current_tokens'] > self.max_tokens):
+        while user_context["current_tokens"] > self.max_tokens:
+            if not user_context["conversation_history"]:
+                break
+            removed = user_context["conversation_history"].pop(0)
+            user_context["current_tokens"] -= self._calculate_tokens(removed["content"])
