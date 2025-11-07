@@ -277,3 +277,28 @@ class ShapeChatBot:
                 ):
                     is_short_reply = True
             uc["is_short_reply"] = is_short_reply
+            is_chinese = textutils.is_mostly_chinese(user_input)
+            if is_chinese:
+                print("The user message is in Chinese.")
+                if is_short_reply:
+                    style_instruction = (
+                        "请用一句自然的“口语化”语气来写出你的下一段回答。"
+                        "你必须优先遵循这个指令。"
+                    )
+                else:
+                    style_instruction = (
+                        "请用几句自然的“口语化”语气来写出你的下一段回答。"
+                        "你必须优先遵循这个指令。"
+                    )
+            else:
+                if is_short_reply:
+                    style_instruction = (
+                        "Write your next response in one concise sentence, "
+                        "still keeping a natural, conversational tone. "
+                        "You must prioritize following that directive."
+                    )
+                else:
+                    style_instruction = (
+                        "Write your next response with a few sentences of 'speech' "
+                        "in a conversational tone. You must prioritize following that directive."
+                    )
