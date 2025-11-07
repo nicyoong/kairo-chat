@@ -160,3 +160,19 @@ class ShapeChatBot:
             return self.get_trait("age", None)
         years = today.year - bday.year - ((today.month, today.day) < (bday.month, bday.day))
         return years
+    
+    def try_trait_based_response(self, user_input: str):
+        """Check if user_input matches a known question and return a natural answer."""
+        text = user_input.lower().strip()
+        text = text.replace("’", "'").replace("‘", "'")
+
+        for entry in self.trait_router:
+            if any(p in text for p in entry["patterns"]):
+                getter = entry["getter"]
+                value = getter() if callable(getter) else None
+                if not value:
+                    return None
+                template = random.choice(entry["responses"])
+                return template.format(value)
+
+        return None
