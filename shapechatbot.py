@@ -215,3 +215,7 @@ class ShapeChatBot:
                     texts.append(str(part))
             return "\n".join(texts)
         return str(content)
+    
+    def _calculate_tokens(self, text):
+        """Count tokens using GPT-4's actual tokenization"""
+        return len(self.encoder.encode(text))
