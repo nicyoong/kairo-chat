@@ -524,3 +524,11 @@ class ShapeChatBot:
             except Exception as log_err:
                 print(f"Failed to log Gemini API attempt: {log_err}")
             return random.choice(self.error_responses)
+        
+    def _cosine_similarity(self, vec1, vec2):
+        """Compute cosine similarity between two small dict vectors."""
+        common = set(vec1.keys()) & set(vec2.keys())
+        num = sum(vec1[w] * vec2[w] for w in common)
+        den1 = math.sqrt(sum(v * v for v in vec1.values()))
+        den2 = math.sqrt(sum(v * v for v in vec2.values()))
+        return num / (den1 * den2) if den1 and den2 else 0.0
