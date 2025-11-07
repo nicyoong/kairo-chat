@@ -241,3 +241,11 @@ class ShapeChatBot:
         trait_reply = self.try_trait_based_response(user_input)
         if trait_reply:
             return trait_reply
+        
+        try:
+            if contentfilter.contains_match(user_input, self.swear_patterns):
+                print("Detected swear word, skipping LLM call.")
+                return random.choice(self.swear_responses)
+            if contentfilter.contains_match(user_input, self.nsfw_patterns):
+                print("Detected NSFW content, skipping LLM call.")
+                return random.choice(self.nsfw_responses)
