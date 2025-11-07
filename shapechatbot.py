@@ -324,3 +324,13 @@ class ShapeChatBot:
                 print(f"User ID: {user_id}")
                 print(f"Token Count for User {user_id}: {uc['current_tokens']}")
             recalled = self.recall_relevant_memories(user_input)
+            # Determine if this channel should use the serious personality
+            use_serious = False
+            if isinstance(user_id, str) and user_id.startswith("guild_"):
+                try:
+                    parts = user_id.split("_")
+                    channel_id = parts[3]
+                    if channel_id in self.serious_channel_ids:
+                        use_serious = True
+                except Exception:
+                    pass
