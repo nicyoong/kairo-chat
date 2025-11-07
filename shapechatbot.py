@@ -138,3 +138,12 @@ class ShapeChatBot:
                     print(f"[CONFIG ERROR] Failed to reload config.yml: {e}")
         except Exception as e:
             print(f"[CONFIG ERROR] Could not check config file: {e}")
+
+    def _parse_iso_date(self, s: str):
+        """
+        Parse 'YYYY-MM-DD' into a date object. Returns None if invalid.
+        """
+        try:
+            return datetime.strptime(s, "%Y-%m-%d").date()
+        except Exception:
+            return None
