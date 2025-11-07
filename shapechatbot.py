@@ -181,3 +181,21 @@ class ShapeChatBot:
                 time.sleep(required_wait)
             now = time.time()
             self.request_timestamps = [t for t in self.request_timestamps if now - t < 60]
+
+    def _calculate_image_tokens(self, image_path: str) -> int:
+        """Estimate Gemini image token cost based on image dimensions."""
+        try:
+            with Image.open(image_path) as img:
+                width, height = img.size
+            if width <= 384 and height <= 384:
+                return 258
+            tiles_x = math.ceil(width / 768)
+            tiles_y = math.ceil(height / 768)
+            total_tiles = tiles_x * tiles_y
+            total_tokens = total_tiles * 258
+            print(f"[TOKEN ESTIMATE] Image {width}x{height}px → {total_tiles} tiles → {total_tokens} tokens")
+            return total_tokens
+        except Exception as e:
+            print(f"[IMAGE TOKEN ERROR] Failed to get image size: {e}")
+            # Fallback to one tile if something goes wrong
+            return 258
