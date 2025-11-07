@@ -335,3 +335,29 @@ class ShapeChatBot:
                 except Exception:
                     pass
             active_personality = self.personality_serious if use_serious else self.personality_fun
+            system_prompt = {"role": "system", "content": active_personality}
+            if recalled:
+                memory_context = {
+                    "role": "system",
+                    "content": "Here are relevant past memories:\n" + "\n".join(recalled),
+                }
+                messages = [system_prompt, memory_context] + uc["conversation_history"]
+            else:
+                messages = [system_prompt] + uc["conversation_history"]
+            input_tokens = self._calculate_tokens("\n".join(m["content"] for m in messages))
+            uc["last_input_tokens"] = input_tokens
+            # Determine token budget based on language
+            if textutils.is_mostly_chinese(user_input):
+                maxtokens = 500
+            else:
+                maxtokens = 300
+            response = self.client.chat.completions.create(
+                model=self.model, reasoning_effort="none", messages=messages, max_tokens=maxtokens
+            )
+            self.gemini_log_tracker.log_call()
+            self._rotate_api_key()
+
+            ai_response = response.choices[0].message.content
+            # Add AI response
+            uc["conversation_history"].append({"role": "assistant", "content": ai_response})
+            uc["current_tokens"] += self._calculate_tokens(ai_response)
