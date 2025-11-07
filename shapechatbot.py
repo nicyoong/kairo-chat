@@ -306,3 +306,21 @@ class ShapeChatBot:
             user_input_with_style = f"{user_input.strip()}\n\n{style_instruction}"
             uc["conversation_history"].append({"role": "user", "content": user_input_with_style})
             uc["current_tokens"] += self._calculate_tokens(user_input_with_style)
+            self._truncate_history(uc)
+            # Log context info
+            if isinstance(user_id, str) and user_id.startswith("guild_"):
+                try:
+                    parts = user_id.split("_")
+                    guild_id = parts[1]
+                    channel_id = parts[3]
+                    print(f"Server ID: {guild_id} | Channel ID: {channel_id}")
+                    print(
+                        f"Token Count for Server {guild_id} | Channel {channel_id}: {uc['current_tokens']}"
+                    )
+                except Exception:
+                    print(f"User ID (unparsed): {user_id}")
+                    print(f"Token Count for context {user_id}: {uc['current_tokens']}")
+            else:
+                print(f"User ID: {user_id}")
+                print(f"Token Count for User {user_id}: {uc['current_tokens']}")
+            recalled = self.recall_relevant_memories(user_input)
