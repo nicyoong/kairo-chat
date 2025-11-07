@@ -147,3 +147,16 @@ class ShapeChatBot:
             return datetime.strptime(s, "%Y-%m-%d").date()
         except Exception:
             return None
+        
+    def _compute_age_from_birthday(self, bday_str: str, today: date | None = None):
+        """
+        Compute age from ISO birthday. Falls back to the stored 'age' if birthday is missing/invalid.
+        """
+        if today is None:
+            today = datetime.date.today()
+        bday = self._parse_iso_date(bday_str) if bday_str else None
+        if not bday:
+            # fallback to static value if available
+            return self.get_trait("age", None)
+        years = today.year - bday.year - ((today.month, today.day) < (bday.month, bday.day))
+        return years
