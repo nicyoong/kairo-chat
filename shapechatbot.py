@@ -176,3 +176,15 @@ class ShapeChatBot:
                 return template.format(value)
 
         return None
+    
+    def _rotate_api_key(self):
+        """Rotate API key after every N requests."""
+        self.key_usage_count += 1
+        if self.key_usage_count >= self.max_uses_per_key:
+            self.key_usage_count = 0
+            self.key_index = (self.key_index + 1) % len(self.api_keys)
+            new_key = self.api_keys[self.key_index]
+            self.client = OpenAI(
+                api_key=new_key, base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+            print(f"Switched to API key {self.key_index + 1}")
