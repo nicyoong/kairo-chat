@@ -63,3 +63,19 @@ class ShapeChatBot:
             pattern = r"[\W_]*".join(map(re.escape, letters)) + "+"
             compiled = re.compile(pattern, re.IGNORECASE)
             self.swear_patterns.append(compiled)
+
+        # Anti NSFW Filter (Hardcoded responses)
+        self.nsfw_responses = [
+            "That’s not appropriate. I won’t continue with that topic.",
+            "I can’t discuss sexual or explicit content.",
+            "Please keep the conversation respectful and safe for work.",
+            "That crosses a line I will not entertain.",
+        ]
+        nsfw_env = os.getenv("NSFW_WORDS", "")
+        self.nsfw_words = [w.strip().lower() for w in nsfw_env.split(",") if w.strip()]
+        self.nsfw_patterns = []
+        for word in self.nsfw_words:
+            letters = list(word)
+            pattern = rf"\b{re.escape(word)}\b"
+            compiled = re.compile(pattern, re.IGNORECASE)
+            self.nsfw_patterns.append(compiled)
