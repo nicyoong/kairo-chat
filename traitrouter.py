@@ -23,3 +23,16 @@ def _init_trait_router(self):
                 "My name's {}, nice to meet you!",
             ],
         },
+        {
+            "patterns": [
+                "how old are you",
+                "what's your age",
+                "what is your age",
+                "can you tell me your age",
+            ],
+            "getter": self.get_age,
+            "responses": [
+                "I'm {} this year.",
+                "{} years old.",
+            ],
+        },
