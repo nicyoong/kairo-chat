@@ -334,3 +334,4 @@ class ShapeChatBot:
                         use_serious = True
                 except Exception:
                     pass
+            active_personality = self.personality_serious if use_serious else self.personality_fun
