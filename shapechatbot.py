@@ -249,3 +249,6 @@ class ShapeChatBot:
             if contentfilter.contains_match(user_input, self.nsfw_patterns):
                 print("Detected NSFW content, skipping LLM call.")
                 return random.choice(self.nsfw_responses)
+            # Enforce global rate limit first
+            self._enforce_rate_limit()
+            self.request_timestamps.append(time.time())
