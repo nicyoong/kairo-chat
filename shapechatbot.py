@@ -12,6 +12,7 @@ import tiktoken
 import yaml
 from openai import OpenAI
 
+import contentfilter
 import textutils
 from characterloader import load_character_profile
 from characterprofile import CharacterProfile
@@ -53,33 +54,12 @@ class ShapeChatBot:
         self.serious_channel_ids = [str(c) for c in (yaml_config.get("serious_channels") or [])]
         self.error_responses = profile_data.get("error_responses", [])
 
-        # Anti Swear Filter
+        swear_data = contentfilter.load_swear_filters()
+        self.swear_patterns = swear_data["patterns"]
         self.swear_responses = profile_data.get("swear_responses", [])
-        swear_env = os.getenv("SWEAR_WORDS", "")
-        self.swear_words = [w.strip().lower() for w in swear_env.split(",") if w.strip()]
-        self.swear_patterns = []
-        for word in self.swear_words:
-            letters = list(word)
-            pattern = r"[\W_]*".join(map(re.escape, letters)) + "+"
-            compiled = re.compile(pattern, re.IGNORECASE)
-            self.swear_patterns.append(compiled)
-
-        # Anti NSFW Filter (Hardcoded responses)
-        self.nsfw_responses = [
-            "That’s not appropriate. I won’t continue with that topic.",
-            "I can’t discuss sexual or explicit content.",
-            "Please keep the conversation respectful and safe for work.",
-            "That crosses a line I will not entertain.",
-        ]
-        nsfw_env = os.getenv("NSFW_WORDS", "")
-        self.nsfw_words = [w.strip().lower() for w in nsfw_env.split(",") if w.strip()]
-        self.nsfw_patterns = []
-        for word in self.nsfw_words:
-            letters = list(word)
-            pattern = rf"\b{re.escape(word)}\b"
-            compiled = re.compile(pattern, re.IGNORECASE)
-            self.nsfw_patterns.append(compiled)
-
+        nsfw_data = contentfilter.load_nsfw_filters()
+        self.nsfw_patterns = nsfw_data["patterns"]
+        self.nsfw_responses = nsfw_data["responses"]
         self.character_profile = CharacterProfile(profile_data)
         _init_trait_router(self)
 
@@ -188,20 +168,6 @@ class ShapeChatBot:
                 api_key=new_key, base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
             )
             print(f"Switched to API key {self.key_index + 1}")
-
-    def _contains_swear(self, text: str) -> bool:
-        text = text.lower()
-        for pattern in getattr(self, "swear_patterns", []):
-            if pattern.search(text):
-                return True
-        return False
-    
-    def _contains_nsfw(self, text: str) -> bool:
-        text = text.lower()
-        for pattern in getattr(self, "nsfw_patterns", []):
-            if pattern.search(text):
-                return True
-        return False
     
     def _enforce_rate_limit(self):
         """Ensure we don't exceed n requests per minute (per instance)"""
