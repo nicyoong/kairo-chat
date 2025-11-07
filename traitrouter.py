@@ -35,4 +35,5 @@ def _init_trait_router(self):
                 "I'm {} this year.",
                 "{} years old.",
             ],
-        },
+        }
+    ]
