@@ -188,3 +188,10 @@ class ShapeChatBot:
                 api_key=new_key, base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
             )
             print(f"Switched to API key {self.key_index + 1}")
+
+    def _contains_swear(self, text: str) -> bool:
+        text = text.lower()
+        for pattern in getattr(self, "swear_patterns", []):
+            if pattern.search(text):
+                return True
+        return False
