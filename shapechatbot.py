@@ -39,6 +39,7 @@ class ShapeChatBot:
             self.client = None
             self.model = "test"
             print("[DEBUG] ShapeChatBot running in test_mode (no API calls).")
+        profile_data = load_character_profile(profile_name)
         self.config_path = "config.yml"
         self._last_config_mtime = 0
         if os.path.exists(self.config_path):
