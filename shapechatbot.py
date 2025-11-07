@@ -18,3 +18,7 @@ from characterprofile import CharacterProfile
 from loggerutils import GeminiLogTracker
 from traitgetters import attach_trait_getters
 from traitrouter import _init_trait_router
+
+@attach_trait_getters
+class ShapeChatBot:
+    def __init__(self, profile_name):
