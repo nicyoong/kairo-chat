@@ -228,3 +228,10 @@ class ShapeChatBot:
                 break
             removed = user_context["conversation_history"].pop(0)
             user_context["current_tokens"] -= self._calculate_tokens(removed["content"])
+
+    def _calculate_typing_delay(self, text):
+        """Calculate delay based on token count (1.3 to 1.7 tokens/second) with min 0.5s"""
+        tokens = self._calculate_tokens(text)
+        tokens_per_second = random.choice([1.3, 1.4, 1.5, 1.6, 1.7])
+        delay = tokens / tokens_per_second
+        return round(max(delay, 0.5), 2)
