@@ -361,3 +361,15 @@ class ShapeChatBot:
             # Add AI response
             uc["conversation_history"].append({"role": "assistant", "content": ai_response})
             uc["current_tokens"] += self._calculate_tokens(ai_response)
+
+            return ai_response
+        
+        except Exception as e:
+            error_text = str(e)
+            print(f"API or logic error: {error_text}")
+            try:
+                self.gemini_log_tracker.log_call()
+            except Exception as log_err:
+                print(f"Failed to log Gemini API attempt: {log_err}")
+            # For any API or transient service failure
+            return random.choice(self.error_responses)
