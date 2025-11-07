@@ -199,3 +199,19 @@ class ShapeChatBot:
             print(f"[IMAGE TOKEN ERROR] Failed to get image size: {e}")
             # Fallback to one tile if something goes wrong
             return 258
+        
+    def _flatten_message_content(self, content):
+        if isinstance(content, str):
+            return content
+        elif isinstance(content, list):
+            texts = []
+            for part in content:
+                if isinstance(part, dict):
+                    if part.get("type") == "text":
+                        texts.append(part.get("text", ""))
+                    elif part.get("type") == "image_url":
+                        continue
+                else:
+                    texts.append(str(part))
+            return "\n".join(texts)
+        return str(content)
