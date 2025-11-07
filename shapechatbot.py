@@ -302,3 +302,7 @@ class ShapeChatBot:
                         "Write your next response with a few sentences of 'speech' "
                         "in a conversational tone. You must prioritize following that directive."
                     )
+            
+            user_input_with_style = f"{user_input.strip()}\n\n{style_instruction}"
+            uc["conversation_history"].append({"role": "user", "content": user_input_with_style})
+            uc["current_tokens"] += self._calculate_tokens(user_input_with_style)
