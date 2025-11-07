@@ -264,3 +264,16 @@ class ShapeChatBot:
             if not is_reminder:
                 uc["last_activity"] = time.time()
                 uc["reminder_sent"] = False
+            is_short_reply = False
+            if user_id in self.short_reply_user_ids:
+                is_short_reply = True
+            if isinstance(user_id, str) and user_id.startswith("guild_"):
+                parts = user_id.split("_")
+                guild_id = parts[1]
+                channel_id = parts[3]
+                if (
+                    guild_id in self.short_reply_guild_ids
+                    or channel_id in self.short_reply_channel_ids
+                ):
+                    is_short_reply = True
+            uc["is_short_reply"] = is_short_reply
