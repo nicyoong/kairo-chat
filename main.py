@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from discord import commands, tasks
 
 import botutils
+import shapechatbot
 
 load_dotenv()
 typing_lock = asyncio.Lock()
@@ -39,6 +40,7 @@ def main():
     botutils.ensure_config_exists()
     with open("config.yml", "r", encoding="utf-8") as f:
         config = yaml.safe_load(f) or {}
+    chatbot = shapechatbot.ShapeChatBot(profile_name=profile_name)
 
 if __name__ == "__main__":
     main()
