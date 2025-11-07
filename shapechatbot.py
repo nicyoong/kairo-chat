@@ -544,3 +544,23 @@ class ShapeChatBot:
                 except ValueError:
                     pass
         return v
+    
+    def recall_relevant_memories(self, user_input, top_k=5):
+        mem_file = "logs/memories.log"
+        if not os.path.exists(mem_file):
+            return []
+        input_vec = textutils.text_to_vector(user_input)
+        memories = []
+        with open(mem_file, "r", encoding="utf-8") as f:
+            for line in f:
+                try:
+                    ts, vec_str, summary = line.strip().split("|", 2)
+                    mem_vec = self._vector_from_line(vec_str)
+                    sim = self._cosine_similarity(input_vec, mem_vec)
+                    memories.append((sim, ts, summary))
+                except ValueError:
+                    continue
+        # Sort by similarity descending
+        memories.sort(key=lambda x: x[0], reverse=True)
+        top = [f"[{t}] {s}" for _, t, s in memories[:top_k] if _ > 0.01]
+        return top
