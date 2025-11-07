@@ -104,3 +104,37 @@ class ShapeChatBot:
         self.short_reply_user_ids = [str(c) for c in (yaml_config.get("short_reply_users") or [])]
         self._last_config_mtime = os.path.getmtime(self.config_path)
         self.is_currently_driving = False
+
+    def reload_config(self):
+        """Reload config.yml periodically."""
+        config_path = "config.yml"
+        try:
+            if not os.path.exists(config_path):
+                return
+            current_mtime = os.path.getmtime(self.config_path)
+            if current_mtime > getattr(self, "_last_config_mtime", 0):
+                print("[CONFIG] Detected config.yml change — reloading...")
+                try:
+                    with open(config_path, "r", encoding="utf-8") as f:
+                        yaml_config = yaml.safe_load(f) or {}
+                    self.serious_channel_ids = [
+                        str(c) for c in (yaml_config.get("serious_channels") or [])
+                    ]
+                    self.short_reply_channel_ids = [
+                        str(c) for c in (yaml_config.get("short_reply_channels") or [])
+                    ]
+                    self.manual_channel_ids = [
+                        str(c) for c in (yaml_config.get("manual_channels") or [])
+                    ]
+                    self.short_reply_guild_ids = [
+                        str(c) for c in (yaml_config.get("short_reply_guilds") or [])
+                    ]
+                    self.short_reply_user_ids = [
+                        str(c) for c in (yaml_config.get("short_reply_users") or [])
+                    ]
+                    self._last_config_mtime = current_mtime
+                    print("[CONFIG] Reloaded config.yml successfully.")
+                except Exception as e:
+                    print(f"[CONFIG ERROR] Failed to reload config.yml: {e}")
+        except Exception as e:
+            print(f"[CONFIG ERROR] Could not check config file: {e}")
