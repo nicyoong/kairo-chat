@@ -82,3 +82,8 @@ class ShapeChatBot:
 
         self.character_profile = CharacterProfile(profile_data)
         _init_trait_router(self)
+
+        self.max_messages = 50
+        self.max_tokens = 10000
+        self.user_contexts = {}
+        self.last_active_user = None
