@@ -532,3 +532,15 @@ class ShapeChatBot:
         den1 = math.sqrt(sum(v * v for v in vec1.values()))
         den2 = math.sqrt(sum(v * v for v in vec2.values()))
         return num / (den1 * den2) if den1 and den2 else 0.0
+    
+    def _vector_from_line(self, vec_str):
+        """Convert 'hash:weight' CSV string back to dict."""
+        v = {}
+        for pair in vec_str.split(","):
+            if ":" in pair:
+                h, w = pair.split(":")
+                try:
+                    v[int(h)] = float(w)
+                except ValueError:
+                    pass
+        return v
