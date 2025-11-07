@@ -252,3 +252,11 @@ class ShapeChatBot:
             # Enforce global rate limit first
             self._enforce_rate_limit()
             self.request_timestamps.append(time.time())
+            # Handle user context
+            if user_id not in self.user_contexts:
+                self.user_contexts[user_id] = {}
+            uc = self.user_contexts.setdefault(user_id, {})
+            uc.setdefault("conversation_history", [])
+            uc.setdefault("current_tokens", 0)
+            uc.setdefault("last_activity", time.time())
+            uc.setdefault("reminder_sent", False)
