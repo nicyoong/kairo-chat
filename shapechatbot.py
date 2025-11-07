@@ -195,3 +195,10 @@ class ShapeChatBot:
             if pattern.search(text):
                 return True
         return False
+    
+    def _contains_nsfw(self, text: str) -> bool:
+        text = text.lower()
+        for pattern in getattr(self, "nsfw_patterns", []):
+            if pattern.search(text):
+                return True
+        return False
