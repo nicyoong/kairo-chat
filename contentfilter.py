@@ -35,3 +35,8 @@ def load_nsfw_filters():
         "patterns": patterns,
         "responses": responses,
     }
+
+def contains_match(text: str, patterns: list[re.Pattern]) -> bool:
+    """Check if text matches any compiled pattern."""
+    text = text.lower()
+    return any(p.search(text) for p in patterns)
