@@ -46,3 +46,8 @@ class ShapeChatBot:
                 yaml_config = yaml.safe_load(f) or {}
         else:
             yaml_config = {}
+        self.personality_fun = profile_data.get("personality_fun", "")
+        self.personality_serious = profile_data.get("personality_serious", "")
+        self.system_prompt = {"role": "system", "content": self.personality_fun}
+        self.serious_channel_ids = [str(c) for c in (yaml_config.get("serious_channels") or [])]
+        self.error_responses = profile_data.get("error_responses", [])
