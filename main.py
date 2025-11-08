@@ -82,6 +82,10 @@ def main():
                 pass
 
         return True
+    
+    def print_startup_message(bot):
+        init_time = datetime.fromtimestamp(bot.startup_time).strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{init_time}] {display_name} is online as {bot.user}")
 
 if __name__ == "__main__":
     main()
