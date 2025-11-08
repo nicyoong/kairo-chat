@@ -7,7 +7,7 @@ from datetime import datetime
 import discord
 import yaml
 from dotenv import load_dotenv
-from discord import commands, tasks
+from discord.ext import commands, tasks
 
 import botutils
 import shapechatbot
@@ -41,6 +41,9 @@ def main():
     with open("config.yml", "r", encoding="utf-8") as f:
         config = yaml.safe_load(f) or {}
     chatbot = shapechatbot.ShapeChatBot(profile_name=profile_name)
+
+    bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+    bot.chatbot = chatbot
 
 if __name__ == "__main__":
     main()
