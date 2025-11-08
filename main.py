@@ -87,5 +87,11 @@ def main():
         init_time = datetime.fromtimestamp(bot.startup_time).strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{init_time}] {display_name} is online as {bot.user}")
 
+    def setup_chatbot_environment(bot):
+        chatbot = bot.chatbot
+        chatbot.user_loggers = {}
+        chatbot.processing_queued = False
+        bot.chatbot.last_activity_time = time.time()
+
 if __name__ == "__main__":
     main()
