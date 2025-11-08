@@ -53,7 +53,21 @@ def main():
         disable_trigger = "you can stop reminding me for now"
         USER_REMINDERS_ENABLED.setdefault(user_id, False)
         chatbot = bot.chatbot
-
+        if enable_trigger in content_lower:
+            if not USER_REMINDERS_ENABLED[user_id]:
+                USER_REMINDERS_ENABLED[user_id] = True
+                response_text = "Alright, I’ll start keeping an eye on reminders again."
+            else:
+                response_text = "I’m already keeping track, don’t worry."
+        elif disable_trigger in content_lower:
+            if USER_REMINDERS_ENABLED[user_id]:
+                USER_REMINDERS_ENABLED[user_id] = False
+                response_text = "Okay, I’ll stop reminding you for now."
+            else:
+                response_text = "They’re already off, don’t worry."
+        else:
+            return False
+ 
 
         return True
 
