@@ -45,5 +45,17 @@ def main():
     bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
     bot.chatbot = chatbot
 
+    async def handle_reminder_toggle(bot, message):
+        """Handles per-user natural-language toggle for reminder system with typing simulation."""
+        user_id = message.author.id
+        content_lower = message.content.strip().lower()
+        enable_trigger = "you can start reminding me again"
+        disable_trigger = "you can stop reminding me for now"
+        USER_REMINDERS_ENABLED.setdefault(user_id, False)
+        chatbot = bot.chatbot
+
+
+        return True
+
 if __name__ == "__main__":
     main()
