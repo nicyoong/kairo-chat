@@ -67,7 +67,19 @@ def main():
                 response_text = "They’re already off, don’t worry."
         else:
             return False
- 
+        tokens = chatbot._calculate_tokens(response_text)
+        typing_delay = chatbot._calculate_typing_delay(response_text)
+        print(f"Sending toggle message ({tokens} tokens) after {typing_delay:.1f}s delay")
+        typing_task = asyncio.create_task(botutils.keep_typing(message.channel))
+        try:
+            await asyncio.sleep(typing_delay)
+            await message.channel.send(response_text.strip())
+        finally:
+            typing_task.cancel()
+            try:
+                await typing_task
+            except asyncio.CancelledError:
+                pass
 
         return True
 
