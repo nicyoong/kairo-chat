@@ -117,5 +117,17 @@ def main():
         except Exception as e:
             print(f"[CONFIG LOOP ERROR] {e}")
 
+    async def process_pending_messages(bot):
+        for queued in bot.pending_messages:
+            msg = queued["message"]
+            try:
+                bot.chatbot.processing_queued = queued.get("is_queued", False)
+                await on_message(msg)
+            except Exception as e:
+                print(f"Error handling queued message from {msg.author}: {e}")
+            finally:
+                bot.chatbot.processing_queued = False
+        bot.pending_messages.clear()
+
 if __name__ == "__main__":
     main()
