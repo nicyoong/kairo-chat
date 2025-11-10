@@ -41,3 +41,10 @@ async def initialize_guild_channels(bot, chatbot, guild, displayname):
             await initialize_channel_context(bot, chatbot, guild, channel, displayname)
         except Exception as e:
             print(f"Error initializing {channel.name}: {e}")
+
+async def send_split_response(bot, chatbot, dm, user_id, response_text, displayname):
+    if chatbot.user_contexts.get(str(user_id), {}).get("is_short_reply", False):
+        sentences = [response_text]
+    else:
+        sentences = textutils.smart_split(response_text)
+
