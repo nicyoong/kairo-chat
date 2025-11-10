@@ -129,5 +129,16 @@ def main():
                 bot.chatbot.processing_queued = False
         bot.pending_messages.clear()
 
+    async def finalize_initialization(bot):
+        init_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        bot.is_initializing = False
+        bot.ready_event.set()
+        print(f"[{init_time}] Initialization complete.")
+        if bot.pending_messages:
+            print(f"[QUEUE] Processing {len(bot.pending_messages)} queued messages...")
+            await process_pending_messages(bot)
+        reload_chatconfig_loop.start()
+        print(f"{display_name} is ready.")
+
 if __name__ == "__main__":
     main()
