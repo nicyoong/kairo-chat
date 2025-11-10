@@ -34,6 +34,10 @@ async def initialize_guild_channels(bot, chatbot, guild, displayname):
             if not channel.permissions_for(guild.me).send_messages:
                 print(f"Skipping #{channel.name}: no permission to send messages.")
                 continue
-
+            is_nsfw = getattr(channel, "nsfw", False)
+            if is_nsfw:
+                print(f"Skipping NSFW channel: #{channel.name}")
+                continue
+            await initialize_channel_context(bot, chatbot, guild, channel, displayname)
         except Exception as e:
             print(f"Error initializing {channel.name}: {e}")
