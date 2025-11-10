@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from discord.ext import commands, tasks
 
 import botutils
+import initutils
 import shapechatbot
 
 load_dotenv()
@@ -92,6 +93,21 @@ def main():
         chatbot.user_loggers = {}
         chatbot.processing_queued = False
         bot.chatbot.last_activity_time = time.time()
+
+    async def initialize_guilds(bot, displayname, config):
+        """Initialize message histories for allowed guilds."""
+        chatbot = bot.chatbot
+        for guild_id in config.get("allowed_guilds", []):
+            try:
+                guild = bot.get_guild(int(guild_id))
+            except ValueError:
+                print(f"[CONFIG ERROR] Invalid guild ID: {guild_id}")
+                continue
+            if not guild:
+                print(f"Skipping guild {guild_id}: not found or bot not in it.")
+                continue
+            print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Fetching channels for guild: {guild.name}")
+            await initutils.initialize_guild_channels(bot, chatbot, guild, display_name)
 
 if __name__ == "__main__":
     main()
