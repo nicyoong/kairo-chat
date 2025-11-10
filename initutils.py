@@ -57,7 +57,22 @@ async def handle_unread_channel_message(bot, chatbot, guild, channel, messages, 
     author_name = last_msg["author_name"]
     user_text = last_msg["content"]
     print(f"Detected unread message in #{channel.name} from {author_name}, replying now...")
-
+    await asyncio.sleep(random.uniform(2, 6))
+    typing_task = asyncio.create_task(botutils.keep_typing(channel))
+    try:
+        location_key = f"guild_{guild.id}_chan_{channel.id}"
+        response_text = await asyncio.get_event_loop().run_in_executor(
+            None, chatbot.get_response, location_key, user_text
+        )
+        await send_split_response(bot, chatbot, channel, location_key, response_text, displayname)
+    except Exception as e:
+        print(f"Error auto-replying to unread channel message: {e}")
+    finally:
+        typing_task.cancel()
+        try:
+            await typing_task
+        except asyncio.CancelledError:
+            pass
 
 async def send_split_response(bot, chatbot, dm, user_id, response_text, displayname):
     if chatbot.user_contexts.get(str(user_id), {}).get("is_short_reply", False):
