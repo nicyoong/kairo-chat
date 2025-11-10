@@ -153,5 +153,13 @@ def main():
         await initialize_guilds(bot, display_name, config)
         await finalize_initialization(bot)
 
+    @bot.event
+    async def on_disconnect():
+        print("Disconnected from Discord. Waiting to reconnect...")
+
+    @bot.event
+    async def on_resumed():
+        print("Reconnected to Discord gateway.")
+
 if __name__ == "__main__":
     main()
