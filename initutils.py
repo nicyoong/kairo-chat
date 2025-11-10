@@ -42,6 +42,15 @@ async def initialize_guild_channels(bot, chatbot, guild, displayname):
         except Exception as e:
             print(f"Error initializing {channel.name}: {e}")
 
+def merge_consecutive_messages(messages):
+    merged = []
+    for msg in messages:
+        if merged and merged[-1]["role"] == msg["role"]:
+            merged[-1]["content"] += " " + msg["content"]
+        else:
+            merged.append(msg)
+    return merged
+
 async def handle_unread_channel_message(bot, chatbot, guild, channel, messages, displayname):
     """If the last message in a guild text channel is unread (user -> before startup), reply naturally."""
     if hasattr(chatbot, "manual_channel_ids"):
