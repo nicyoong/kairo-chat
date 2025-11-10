@@ -47,4 +47,8 @@ async def send_split_response(bot, chatbot, dm, user_id, response_text, displayn
         sentences = [response_text]
     else:
         sentences = textutils.smart_split(response_text)
+    total_tokens = sum(chatbot._calculate_tokens(s) for s in sentences)
+    total_chars = sum(len(s) for s in sentences)
+    print(f"Total tokens in this response: {total_tokens}")
+    print(f"Total characters in this response: {total_chars}")
 
