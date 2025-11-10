@@ -55,4 +55,17 @@ async def send_split_response(bot, chatbot, dm, user_id, response_text, displayn
     # total_cost = costutils.log_gemini_cost(
     #     chatbot, str(user_id), input_tokens, total_tokens
     # )
-
+    for sentence in sentences:
+        if not sentence.strip():
+            continue
+        sentence = textutils.clean_sentence(sentence)
+        tokens = chatbot._calculate_tokens(sentence)
+        delay = chatbot._calculate_typing_delay(sentence)
+        print(f"Sending sentence ({tokens} tokens) after {delay:.1f}s delay")
+        await asyncio.sleep(delay)
+        bot_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        chatbot.user_loggers[str(user_id)].info(
+            f"[{displayname.upper()} {user_id} @ {bot_time}] {sentence}"
+        )
+        await dm.send(sentence.strip())
+        chatbot.user_contexts[str(user_id)]["last_bot_reply"] = time.time()
