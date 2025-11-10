@@ -140,5 +140,18 @@ def main():
         reload_chatconfig_loop.start()
         print(f"{display_name} is ready.")
 
+    @bot.event
+    async def on_ready():
+        """Main entry point when the bot becomes ready."""
+        bot.startup_time = time.time()
+        random.seed(time.time_ns())
+        print_startup_message(bot)
+        bot.is_initializing = True
+        bot.pending_messages = []
+        bot.ready_event = asyncio.Event()
+        setup_chatbot_environment(bot)
+        await initialize_guilds(bot, display_name, config)
+        await finalize_initialization(bot)
+
 if __name__ == "__main__":
     main()
