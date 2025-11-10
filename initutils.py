@@ -11,7 +11,7 @@ from tqdm import tqdm
 import botutils
 import loggerutils
 import textutils
-import costutils
+# import costutils
 
 load_dotenv()
 
@@ -41,6 +41,26 @@ async def initialize_guild_channels(bot, chatbot, guild, displayname):
             await initialize_channel_context(bot, chatbot, guild, channel, displayname)
         except Exception as e:
             print(f"Error initializing {channel.name}: {e}")
+
+async def initialize_channel_context(bot, chatbot, guild, channel, displayname):
+    location_key = f"guild_{guild.id}_chan_{channel.id}"
+    chatbot.user_loggers[location_key] = loggerutils.setup_logger(location_key)
+    messages = await fetch_channel_messages(channel)
+    if not messages:
+        return
+    merged_messages = merge_consecutive_messages(messages)
+    total_tokens = sum(chatbot._calculate_tokens(m["content"]) for m in merged_messages)
+    chatbot.user_contexts[location_key] = {
+        "conversation_history": merged_messages,
+        "current_tokens": total_tokens,
+        "last_activity": time.time(),
+        "reminder_sent": True,
+    }
+
+    print(
+        f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Loaded {len(messages)} messages ({total_tokens} tokens) for #{channel.name}."
+    )
+    await handle_unread_channel_message(bot, chatbot, guild, channel, merged_messages, displayname)
 
 async def fetch_channel_messages(channel, limit=5000):
     nine_months_ago = datetime.now(timezone.utc) - timedelta(days=30 * 9)
