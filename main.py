@@ -109,5 +109,13 @@ def main():
             print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Fetching channels for guild: {guild.name}")
             await initutils.initialize_guild_channels(bot, chatbot, guild, display_name)
 
+    @tasks.loop(seconds=10)
+    async def reload_chatconfig_loop():
+        """Reload YAML configuration every 10 seconds."""
+        try:
+            bot.chatbot.reload_config()
+        except Exception as e:
+            print(f"[CONFIG LOOP ERROR] {e}")
+
 if __name__ == "__main__":
     main()
