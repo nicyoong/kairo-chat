@@ -52,6 +52,11 @@ async def handle_unread_channel_message(bot, chatbot, guild, channel, messages, 
         return
     if messages[-1].get("timestamp", 0) > bot.startup_time:
         return
+    last_msg = messages[-1]
+    author_id = last_msg["author_id"]
+    author_name = last_msg["author_name"]
+    user_text = last_msg["content"]
+    print(f"Detected unread message in #{channel.name} from {author_name}, replying now...")
 
 
 async def send_split_response(bot, chatbot, dm, user_id, response_text, displayname):
