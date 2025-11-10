@@ -51,4 +51,8 @@ async def send_split_response(bot, chatbot, dm, user_id, response_text, displayn
     total_chars = sum(len(s) for s in sentences)
     print(f"Total tokens in this response: {total_tokens}")
     print(f"Total characters in this response: {total_chars}")
+    # input_tokens = chatbot.user_contexts[str(user_id)].get("last_input_tokens", 0)
+    # total_cost = costutils.log_gemini_cost(
+    #     chatbot, str(user_id), input_tokens, total_tokens
+    # )
 
