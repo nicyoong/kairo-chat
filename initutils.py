@@ -42,6 +42,18 @@ async def initialize_guild_channels(bot, chatbot, guild, displayname):
         except Exception as e:
             print(f"Error initializing {channel.name}: {e}")
 
+async def handle_unread_channel_message(bot, chatbot, guild, channel, messages, displayname):
+    """If the last message in a guild text channel is unread (user -> before startup), reply naturally."""
+    if hasattr(chatbot, "manual_channel_ids"):
+        if str(channel.id) in chatbot.manual_channel_ids:
+            print(f"[MANUAL ONLY] Skipping unread reply in #{channel.name} ({channel.id})")
+            return
+    if not messages or messages[-1]["role"] != "user":
+        return
+    if messages[-1].get("timestamp", 0) > bot.startup_time:
+        return
+
+
 async def send_split_response(bot, chatbot, dm, user_id, response_text, displayname):
     if chatbot.user_contexts.get(str(user_id), {}).get("is_short_reply", False):
         sentences = [response_text]
