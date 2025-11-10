@@ -14,3 +14,12 @@ import textutils
 import costutils
 
 load_dotenv()
+
+
+async def initialize_guild_channels(bot, chatbot, guild, displayname):
+    # Include both normal text channels and threads
+    all_text_like = list(guild.text_channels) + list(guild.threads)
+    print(
+        f"[{datetime.now():%Y-%m-%d %H:%M:%S}] Fetching {len(all_text_like)} channels/threads for guild: {guild.name}"
+    )
+
