@@ -42,6 +42,40 @@ async def initialize_guild_channels(bot, chatbot, guild, displayname):
         except Exception as e:
             print(f"Error initializing {channel.name}: {e}")
 
+async def fetch_channel_messages(channel, limit=5000):
+    nine_months_ago = datetime.now(timezone.utc) - timedelta(days=30 * 9)
+    count = 0
+    async for msg in channel.history(limit=limit):
+        if msg.created_at < nine_months_ago:
+            continue
+        count += 1
+    messages = []
+    with tqdm(total=count, desc=f"Fetching #{channel.name}", unit="msg", leave=False) as pbar:
+        try:
+            async for msg in channel.history(limit=limit):
+                if msg.author.bot:
+                    continue
+                if msg.type not in (discord.MessageType.default, discord.MessageType.reply):
+                    continue
+                if msg.created_at < nine_months_ago:
+                    continue
+                role = "assistant" if msg.author.id == channel.guild.me.id else "user"
+                messages.append(
+                    {
+                        "role": role,
+                        "content": msg.content,
+                        "timestamp": msg.created_at.timestamp(),
+                        "author_id": msg.author.id,
+                        "author_name": msg.author.name,
+                    }
+                )
+                pbar.update(1)
+        except Exception as e:
+            print(f"Error fetching #{channel.name}: {e}")
+        pbar.n = count
+        pbar.refresh()
+    return list(reversed(messages))
+
 def merge_consecutive_messages(messages):
     merged = []
     for msg in messages:
